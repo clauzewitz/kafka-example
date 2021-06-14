@@ -1,0 +1,91 @@
+server:
+  port: 8080
+
+demo:
+  recipe:
+    topic: kafka-example
+  cheif:
+    topic: kafka-example2
+
+# development properties
+spring:
+  config:
+    activate:
+      on-profile: dev
+  task:
+    execution:
+      thread-name-prefix: thread-
+      pool:
+        core-size: 2
+        max-size: 3
+        queue-capacity: 5
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+      bootstrap-servers:
+        - "localhost:9092"
+      retries: 5
+    consumer:
+      bootstrap-servers:
+        - "localhost:9092"
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.clauzewitz.kafkaexample.vo
+
+logging:
+  level:
+    root: info
+    com:
+      clauzewitz: debug
+---
+
+# production properties
+spring:
+  config:
+    activate:
+      on-profile: prod
+  task:
+    execution:
+      thread-name-prefix: thread-
+      pool:
+        core-size: 2
+        max-size: 4
+        queue-capacity: 8
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+      bootstrap-servers:
+        - "localhost:9092"
+      retries: 5
+    consumer:
+      bootstrap-servers:
+        - "localhost:9092"
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.clauzewitz.kafkaexample.vo
+
+logging:
+  level:
+    root: warn
+    com:
+      clauzewitz: fatal
+---
+
+# production properties
+spring:
+  config:
+    activate:
+      on-profile: test
+---
